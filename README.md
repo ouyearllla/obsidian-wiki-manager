@@ -4,7 +4,7 @@ Obsidian plugin for managing a Wiki knowledge base. Scan `raw/` for unprocessed 
 
 ## Background
 
-This plugin implements the **LLM Wiki** pattern described by [Andrej Karpathy](https://karpathy.ai):
+This plugin implements the **LLM Wiki** pattern described by [Andrej Karpathy](https://karpathy.ai). Read the full methodology: [[docs/karpathy-wiki-methodology.md](docs/karpathy-wiki-methodology.md) (English)] [[docs/karpathy-wiki-methodology.zh.md](docs/karpathy-wiki-methodology.zh.md) (中文)]
 
 > Instead of using LLMs for one-off RAG queries, incrementally build and maintain a **persistent, structured wiki** — a collection of interlinked Markdown files sitting between you and your raw source materials.
 
