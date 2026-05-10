@@ -2,6 +2,31 @@
 
 Obsidian plugin for managing a Wiki knowledge base. Scan `raw/` for unprocessed files, trigger AI-powered ingest, run lint checks — all from a sidebar panel.
 
+## Background
+
+This plugin implements the **LLM Wiki** pattern described by [Andrej Karpathy](https://karpathy.ai):
+
+> Instead of using LLMs for one-off RAG queries, incrementally build and maintain a **persistent, structured wiki** — a collection of interlinked Markdown files sitting between you and your raw source materials.
+
+**The core insight**: RAG makes the LLM re-discover knowledge from scratch every query. Nothing accumulates. A wiki is different — it's a **living, compounding artifact**. Cross-references are already in place. Contradictions are flagged. Syntheses already reflect everything you've read. Each new document and each question makes the wiki richer.
+
+### Three-layer architecture
+
+| Layer | Contents | Managed by |
+|-------|----------|------------|
+| **Raw** (`raw/`) | Source documents — articles, papers, interview Q&As | You (read-only for AI) |
+| **Wiki** (`wiki/`) | Structured Markdown — summaries, concepts, entities, comparisons | AI (read-only for you) |
+| **Schema** (`CLAUDE.md`) | Rules for structure, conventions, and workflows | Both, evolving together |
+
+### Workflow
+
+1. **You** drop a new file into `raw/`
+2. **Wiki Manager** detects the unprocessed file and offers one-click ingest
+3. **AI** reads the file, extracts key info, creates/updates wiki pages, cross-references with existing knowledge, and logs everything
+4. **You** browse the updated wiki in Obsidian — follow links, view the graph, read updated pages
+
+Obsidian is the IDE. The AI is the programmer. The wiki is the codebase.
+
 ## Features
 
 - **Scan raw/** — Detects files in `raw/` that haven't been referenced by any source page in `wiki/来源/`
