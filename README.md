@@ -35,6 +35,8 @@ Obsidian is the IDE. The AI is the programmer. The wiki is the codebase.
 - **Lint Check** — Displays health check checklist, can notify Claudian to execute
 - **Open Index** — Quick open `wiki/index.md`
 
+![Screenshot](docs/screenshot.png)
+
 ## How It Works
 
 Wiki Manager integrates with [Claudian](https://github.com/YishenTu/claudian) — an Obsidian plugin that embeds Claude Code as an AI collaborator. When you click "Ingest", the plugin calls Claudian's internal API to send a message directly into the conversation, triggering the AI to process the raw file according to your knowledge base workflow.
