@@ -4,6 +4,6 @@
   "version": "1.0.0",
   "minAppVersion": "1.4.0",
   "description": "Manage your Wiki knowledge base: scan raw/ for unprocessed files, trigger ingest, run lint checks.",
-  "author": "oll",
+  "author": "ouyearllla",
   "isDesktopOnly": true
 }
