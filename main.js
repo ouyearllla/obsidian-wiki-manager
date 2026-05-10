@@ -4,11 +4,25 @@ const obsidian = require('obsidian');
 const VIEW_TYPE = 'wiki-manager-view';
 const PENDING_TASKS_PATH = '.claude/pending-ingest.json';
 
+// ============================================
+// Configuration — change these to match your vault structure
+// ============================================
+const CONFIG = {
+    rawDir: 'raw/',                    // Raw source materials
+    rawExclude: 'raw/README.md',       // Excluded from scanning
+    wikiDir: 'wiki/',                  // Wiki root
+    sourcesDir: 'wiki/来源/',           // Source summary pages
+    conceptsDir: 'wiki/概念/',          // Concept pages
+    entitiesDir: 'wiki/实体/',          // Entity pages
+    comparisonsDir: 'wiki/对比/',       // Comparison pages
+    indexPath: 'wiki/index.md',        // Content index
+};
+
 /**
  * Check if a file is a markdown file in raw/ (excluding README)
  */
 function isRawMdFile(file) {
-    return file.path.startsWith('raw/') && file.path.endsWith('.md') && file.path !== 'raw/README.md';
+    return file.path.startsWith(CONFIG.rawDir) && file.path.endsWith('.md') && file.path !== CONFIG.rawExclude;
 }
 
 /**
@@ -32,17 +46,18 @@ function sourceRefsToPaths(sources) {
     const paths = new Set();
     if (!sources) return paths;
 
+    const rawPrefix = CONFIG.rawDir;
     const items = Array.isArray(sources) ? sources : [sources];
     for (const item of items) {
         const s = String(item);
         // Match [[raw/xxx.md]] wikilink
-        const wikiMatch = s.match(/\[\[(raw\/.+?)\]\]/);
+        const wikiMatch = s.match(new RegExp('\\[\\[(' + rawPrefix + '.+?)\\]\\]'));
         if (wikiMatch) {
             paths.add(wikiMatch[1]);
             continue;
         }
         // Match raw/xxx.md plain path
-        if (s.startsWith('raw/')) {
+        if (s.startsWith(rawPrefix)) {
             paths.add(s);
         }
     }
@@ -146,7 +161,7 @@ module.exports = class WikiManagerPlugin extends obsidian.Plugin {
 
             // Read all source pages and collect referenced raw paths
             const sourceFiles = files.filter(f =>
-                f.path.startsWith('wiki/来源/') && f.path.endsWith('.md')
+                f.path.startsWith(CONFIG.sourcesDir) && f.path.endsWith('.md')
             );
 
             const referencedPaths = new Set();
@@ -166,7 +181,7 @@ module.exports = class WikiManagerPlugin extends obsidian.Plugin {
             for (const sf of sourceFiles) {
                 try {
                     const content = await this.app.vault.read(sf);
-                    const regex = /\[\[(raw\/[^\]]+?)\]\]/g;
+                    const regex = new RegExp('\\[\\[(' + CONFIG.rawDir + '[^\\]]+?)\\]\\]', 'g');
                     let m;
                     while ((m = regex.exec(content)) !== null) {
                         referencedPaths.add(m[1]);
@@ -193,10 +208,10 @@ module.exports = class WikiManagerPlugin extends obsidian.Plugin {
     async getWikiStats() {
         const files = this.app.vault.getFiles();
         return {
-            sources: files.filter(f => f.path.startsWith('wiki/来源/') && f.path.endsWith('.md')).length,
-            concepts: files.filter(f => f.path.startsWith('wiki/概念/') && f.path.endsWith('.md')).length,
-            entities: files.filter(f => f.path.startsWith('wiki/实体/') && f.path.endsWith('.md')).length,
-            comparisons: files.filter(f => f.path.startsWith('wiki/对比/') && f.path.endsWith('.md')).length,
+            sources: files.filter(f => f.path.startsWith(CONFIG.sourcesDir) && f.path.endsWith('.md')).length,
+            concepts: files.filter(f => f.path.startsWith(CONFIG.conceptsDir) && f.path.endsWith('.md')).length,
+            entities: files.filter(f => f.path.startsWith(CONFIG.entitiesDir) && f.path.endsWith('.md')).length,
+            comparisons: files.filter(f => f.path.startsWith(CONFIG.comparisonsDir) && f.path.endsWith('.md')).length,
         };
     }
 
@@ -537,7 +552,7 @@ class WikiManagerView extends obsidian.ItemView {
                 this.showLintModal();
                 break;
             case 'index':
-                this.openFile('wiki/index.md');
+                this.openFile(CONFIG.indexPath);
                 break;
         }
     }

@@ -60,6 +60,40 @@ vault/
 └── CLAUDE.md                # Workflow schema
 ```
 
+### Customizing Folder Names
+
+If your vault uses different folder names (e.g. English instead of Chinese), change the `CONFIG` object at the top of `main.js`:
+
+```js
+const CONFIG = {
+    rawDir: 'raw/',                    // Raw source materials
+    rawExclude: 'raw/README.md',
+    wikiDir: 'wiki/',
+    sourcesDir: 'wiki/来源/',           // ← e.g. 'wiki/sources/'
+    conceptsDir: 'wiki/概念/',          // ← e.g. 'wiki/concepts/'
+    entitiesDir: 'wiki/实体/',          // ← e.g. 'wiki/entities/'
+    comparisonsDir: 'wiki/对比/',       // ← e.g. 'wiki/comparisons/'
+    indexPath: 'wiki/index.md',
+};
+```
+
+Example for a fully English vault:
+
+```js
+const CONFIG = {
+    rawDir: 'raw/',
+    rawExclude: 'raw/README.md',
+    wikiDir: 'wiki/',
+    sourcesDir: 'wiki/sources/',
+    conceptsDir: 'wiki/concepts/',
+    entitiesDir: 'wiki/entities/',
+    comparisonsDir: 'wiki/comparisons/',
+    indexPath: 'wiki/index.md',
+};
+```
+
+That's the only change needed — the plugin reads all paths from this config.
+
 The detection logic checks source pages in `wiki/来源/` for `[[raw/...]]` wikilinks or `source:` frontmatter references to determine which raw files have been processed.
 
 ## Installation
